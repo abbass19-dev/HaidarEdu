@@ -1,0 +1,276 @@
+/* admin.module.css */
+
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: #050505;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  zIndex: 1000;
+}
+
+.sidebar {
+  width: 280px;
+  border-right: 1px solid var(--border-subtle);
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  background: #080808;
+  z-index: 2005;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding-top: calc(32px + env(safe-area-inset-top));
+}
+
+.sidebarMobileActive {
+  transform: translateX(0);
+}
+
+.sidebarMobileHidden {
+  transform: translateX(-100%);
+}
+
+.sidebarHeader {
+  font-weight: 800;
+  font-size: 1.4rem;
+  padding: 0 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brandName {
+  color: var(--primary-lime);
+}
+
+.brandSub {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin-left: 4px;
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.nav {
+  flex: 1;
+}
+
+.footer {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 20px;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  width: 100%;
+  color: #ef4444;
+  background: transparent;
+  border: none;
+  fontWeight: 600;
+  cursor: pointer;
+}
+
+.main {
+  flex: 1;
+  padding: 20px 24px 100px;
+  transition: margin-left 0.3s ease;
+}
+
+.contentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.menuBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-lime);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+}
+
+/* Sidebar Item */
+.sidebarLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  margin-bottom: 4px;
+  text-decoration: none;
+}
+
+.sidebarLinkActive {
+  color: #000;
+  background: var(--primary-lime);
+  font-weight: 700;
+}
+
+.sidebarLinkInactive {
+  color: var(--text-muted);
+  background: transparent;
+  font-weight: 500;
+}
+
+/* Dashboard Stats */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.statCard {
+  padding: 24px;
+  border-radius: var(--radius-lg);
+}
+
+.statHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.statTitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.statIcon {
+  color: var(--primary-lime);
+}
+
+.statValue {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.statTrend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+}
+
+.trendUp { color: #4ade80; }
+.trendDown { color: #f87171; }
+.trendNeutral { color: var(--text-dim); }
+
+.trendSub {
+  color: var(--text-dim);
+}
+
+/* Activity & Quick Stats */
+.dashboardGrid {
+  display: grid;
+  gap: 20px;
+}
+
+.activityCard {
+  padding: 24px;
+  border-radius: var(--radius-lg);
+}
+
+.cardTitle {
+  font-size: 1.2rem;
+  margin-bottom: 24px;
+}
+
+.activityItem {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.activityItem:last-child {
+  border-bottom: none;
+}
+
+.activityIconBox {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activityInfo {
+  flex: 1;
+}
+
+.activityUser {
+  font-weight: 600;
+}
+
+.activityAction {
+  font-size: 0.9rem;
+}
+
+.activityTime {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.quickStatsCard {
+  padding: 24px;
+  border-radius: var(--radius-lg);
+}
+
+.quickStatItem {
+  margin-bottom: 16px;
+}
+
+.quickStatLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+.progressBar {
+  height: 6px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+}
+
+.limeFill { background: var(--primary-lime); }
+.greenFill { background: #4ade80; }
