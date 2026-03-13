@@ -7,12 +7,66 @@ import Success3D from "./3d/Success3D";
 import styles from "@/app/home.module.css";
 
 const testimonials = [
-    { name: "Sarah K.", role: "Professional Trader", text: "HaidarEdu's evaluation process is the most transparent I've encountered. The education provided gave me the edge I needed.", rating: 5 },
-    { name: "Michael T.", role: "Market Analyst", text: "The capital access changed my life. Scaling from a small personal account to $200k was seamless.", rating: 5, },
-    { name: "James L.", role: "Day Trader", text: "Finally, a platform that understands what traders actually need. The tools and community are top-notch.", rating: 5 },
-    { name: "Elena R.", role: "Swing Trader", text: "The AI assistant is like having a pro mentor available 24/7. My risk management has improved drastically.", rating: 5 },
-    { name: "David W.", role: "Elite Trader", text: "Outstanding support and fast payouts. HaidarEdu is the gold standard for funded accounts.", rating: 5, },
-    { name: "Aria M.", role: "Junior Trader", text: "I started as a student and now it's my full-time job. The step-by-step guidance is incredible.", rating: 5 },
+  {
+    name: "Sarah K.",
+    role: "Professional Trader",
+    text: "HaidarEdu's evaluation process is the most transparent I've encountered. The education provided gave me the edge I needed.",
+    rating: 5,
+  },
+  {
+    name: "Michael T.",
+    role: "Market Analyst",
+    text: "The capital access changed my life. Scaling from a small personal account to $200k was seamless.",
+    rating: 5,
+  },
+  {
+    name: "James L.",
+    role: "Day Trader",
+    text: "Finally, a platform that understands what traders actually need. The tools and community are top-notch.",
+    rating: 5,
+  },
+  {
+    name: "Elena R.",
+    role: "Swing Trader",
+    text: "The AI assistant is like having a pro mentor available 24/7. My risk management has improved drastically.",
+    rating: 5,
+  },
+  {
+    name: "David W.",
+    role: "Elite Trader",
+    text: "Outstanding support and fast payouts. HaidarEdu is the gold standard for funded accounts.",
+    rating: 5,
+  },
+  {
+    name: "Aria M.",
+    role: "Junior Trader",
+    text: "I started as a student and now it's my full-time job. The step-by-step guidance is incredible.",
+    rating: 5,
+  },
+  {
+    name: "Lucas F.",
+    role: "Swing Trader",
+    text: "I've tried multiple prop firms, but the community here sets HaidarEdu apart. We all grow together.",
+    rating: 5,
+  },
+  {
+    name: "Sophie C.",
+    role: "Forex Specialist",
+    text: "Their risk management tools inside the dashboard are life-savers. It forces discipline and consistency.",
+    rating: 5,
+  },
+  {
+    name: "Omar H.",
+    role: "Crypto Trader",
+    text: "The funding process is straightforward and scaling is fair. Highly recommended for crypto enthusiasts.",
+    rating: 4,
+  },
+  {
+    name: "Jasmine Y.",
+    role: "Portfolio Manager",
+    text: "Haidar's analysis sessions are pure gold. The strategies work flawlessly in current market conditions.",
+    rating: 5,
+  },
 ];
 
 const TestimonialCard = ({ item }) => (
@@ -130,9 +184,7 @@ const SuccessStories = () => {
 
         <div className={styles.marqueeContainer}>
           {/* Column 1: Upwards */}
-          <div
-            className={`${styles.marqueeColumn} ${styles.up} ${styles.slow}`}
-          >
+          <div className={`${styles.marqueeColumn} ${styles.up}`}>
             {tripled.map((item, i) => (
               <TestimonialCard key={i} item={item} />
             ))}
@@ -140,7 +192,7 @@ const SuccessStories = () => {
 
           {/* Column 2: Downwards */}
           <div
-            className={`${styles.marqueeColumn} ${styles.down} ${styles.fast}`}
+            className={`${styles.marqueeColumn} ${styles.down} ${styles.fast} ${styles.hideMobile}`}
           >
             {tripled
               .slice()
@@ -151,7 +203,9 @@ const SuccessStories = () => {
           </div>
 
           {/* Column 3: Upwards */}
-          <div className={`${styles.marqueeColumn} ${styles.up}`}>
+          <div
+            className={`${styles.marqueeColumn} ${styles.up} ${styles.hideMobile}`}
+          >
             {[...tripled].reverse().map((item, i) => (
               <TestimonialCard key={i} item={item} />
             ))}

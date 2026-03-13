@@ -13,6 +13,7 @@ import {
   Settings,
   LayoutDashboard,
   LogOut,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -76,7 +77,7 @@ const Navbar = () => {
     { name: "Programs", path: "/programs", icon: <Notebook size={20} /> },
     { name: "Courses", path: "/courses", icon: <BookOpen size={20} /> },
     { name: "Support", path: "/live-chat", icon: <MessageSquare size={20} /> },
-    { name: "Articles", path: "/articles", icon: <User size={20} /> },
+    { name: "Articles", path: "/articles", icon: <FileText size={20} /> },
   ];
 
   const handleLogout = async () => {
@@ -398,7 +399,7 @@ const Navbar = () => {
                 </AnimatePresence>
               </div>
             ) : (
-              <Link href="/login" className="desktop-only text-decoration-none">
+              <Link href="/login" style={{ textDecoration: "none" }}>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
