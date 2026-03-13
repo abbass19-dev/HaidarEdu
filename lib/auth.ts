@@ -8,7 +8,7 @@ import {
     User
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { auth, db } from "./firebase";
+import { auth, db } from "./firebase/config";
 
 const googleProvider = new GoogleAuthProvider();
 const ADMIN_EMAIL = 'abbashijazi657@gmail.com';

@@ -131,6 +131,8 @@
 
 .heroButtonFull {
   width: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 .hero3DWrapper {
@@ -139,7 +141,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 1000px;
+
 }
 
 @media (max-width: 1024px) {
@@ -220,12 +222,13 @@
   line-height: 1.6;
 }
 
-/* Success Stories Marquee */
+
 .marqueeContainer {
   display: flex;
   gap: 20px;
   height: 600px;
   mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
 }
 
 .marqueeColumn {
@@ -236,19 +239,19 @@
 }
 
 .marqueeColumn.up {
-  animation: scroll-up 60s linear infinite;
+  animation: scroll-up 12s linear infinite;
 }
 
 .marqueeColumn.down {
-  animation: scroll-down 60s linear infinite;
+  animation: scroll-down 12s linear infinite;
 }
 
 .marqueeColumn.slow {
-  animation-duration: 90s;
+  animation-duration: 40s;
 }
 
 .marqueeColumn.fast {
-  animation-duration: 45s;
+  animation-duration: 20s;
 }
 
 @keyframes scroll-up {
