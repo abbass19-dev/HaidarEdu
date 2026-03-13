@@ -11,7 +11,7 @@
   inset: 0;
   background: rgba(0,0,0,0.5);
   backdrop-filter: blur(4px);
-  zIndex: 1000;
+  z-index: 1000;
 }
 
 .sidebar {
@@ -80,7 +80,7 @@
   color: #ef4444;
   background: transparent;
   border: none;
-  fontWeight: 600;
+  font-weight: 600;
   cursor: pointer;
 }
 
