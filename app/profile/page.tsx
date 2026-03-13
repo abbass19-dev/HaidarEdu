@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { subscribeToAuthChanges } from "@/lib/auth";
 import { AuthGuard } from "@/components/auth/AuthGuard";
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/firebase/config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { User, Save, Edit2, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
