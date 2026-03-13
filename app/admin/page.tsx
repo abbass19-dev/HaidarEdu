@@ -108,14 +108,14 @@ export default function AdminDashboardPage() {
           },
         });
 
-        const recentUsers = (usersData as any[])
+        const recentUsers = (usersData as any)
           .sort(
-            (a, b) =>
+            (a: any, b: any) =>
               new Date(b.createdAt || 0).getTime() -
               new Date(a.createdAt || 0).getTime(),
           )
           .slice(0, 5)
-          .map((u) => ({
+          .map((u: any) => ({
             id: u.id,
             user: u.email ? u.email.split("@")[0] : "Unknown User",
             action: "just signed up",
