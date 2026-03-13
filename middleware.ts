@@ -1,5 +1,4 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/request';
+import { NextResponse, type NextRequest } from 'next/server';
 
 // This is a simplified middleware for demonstration.
 // In a real app, you'd verify the session cookie or token.
