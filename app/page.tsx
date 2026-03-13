@@ -10,15 +10,27 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import { useRouter } from "next/navigation";
-import SnowEffect from "@/components/effects/SnowEffect";
-import SuccessStories from "@/components/Home/SuccessStories";
-import Hero3D from "@/components/Home/3d/Hero3D";
-import FundingProcess from "@/components/Home/FundingProcess";
-import ScrollReveal3D from "@/components/Home/ScrollReveal3D";
-import TradingSignals from "@/components/Home/TradingSignals";
-import TradeExecutionDemo from "@/components/Home/TradeExecutionDemo";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/layout/Navbar";
 import styles from "./home.module.css";
+import SnowEffect from "@/components/effects/SnowEffect";
+
+// Lazy load heavy/3D components
+const Hero3D = dynamic(() => import("@/components/Home/3d/Hero3D"), {
+  ssr: false,
+});
+const SuccessStories = dynamic(
+  () => import("@/components/Home/SuccessStories"),
+  { ssr: false },
+);
+const FundingProcess = dynamic(
+  () => import("@/components/Home/FundingProcess"),
+  { ssr: false },
+);
+const TradingSignals = dynamic(
+  () => import("@/components/Home/TradingSignals"),
+  { ssr: false },
+);
 
 const Preloader = ({ onComplete }: { onComplete: () => void }) => {
   return (
@@ -213,9 +225,7 @@ const HomePage = () => {
             <Hero />
             <Features />
             <TradingSignals />
-            <TradeExecutionDemo />
             <FundingProcess />
-            <ScrollReveal3D />
             <SuccessStories />
           </React.Fragment>
         )}

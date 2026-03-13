@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ArrowRight, Eye, Calendar } from 'lucide-react';
 import { getArticles } from '@/lib/db';
+import Navbar from '@/components/layout/Navbar';
 
 const ArticlesPage = () => {
     const [articles, setArticles] = useState<any[]>([]);
@@ -30,6 +31,8 @@ const ArticlesPage = () => {
     }, []);
 
     return (
+        <>
+        <Navbar />
         <main style={{ paddingTop: '160px', paddingBottom: '100px', minHeight: '100vh' }}>
             <div className="container">
                 <div style={{
@@ -104,6 +107,7 @@ const ArticlesPage = () => {
                 </div>
             </div>
         </main>
+        </>
     );
 };
 

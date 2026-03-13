@@ -76,7 +76,7 @@ const Navbar = () => {
     { name: "Programs", path: "/programs", icon: <Notebook size={20} /> },
     { name: "Courses", path: "/courses", icon: <BookOpen size={20} /> },
     { name: "Support", path: "/live-chat", icon: <MessageSquare size={20} /> },
-    { name: "Profile", path: "/profile", icon: <User size={20} /> },
+    { name: "Articles", path: "/articles", icon: <User size={20} /> },
   ];
 
   const handleLogout = async () => {

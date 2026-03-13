@@ -142,6 +142,37 @@
   perspective: 1000px;
 }
 
+@media (max-width: 1024px) {
+  .hero {
+    padding: 120px 0 60px;
+  }
+
+  .heroTitle {
+    font-size: clamp(2rem, 10vw, 3.5rem);
+  }
+
+  .hero3DWrapper {
+    height: 300px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 100px 0 40px;
+  }
+
+  .heroButtons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .heroButton {
+    width: 100%;
+  }
+}
+
 .features {
   padding: 100px 0;
 }
@@ -187,4 +218,70 @@
 .featureDesc {
   color: var(--text-muted);
   line-height: 1.6;
+}
+
+/* Success Stories Marquee */
+.marqueeContainer {
+  display: flex;
+  gap: 20px;
+  height: 600px;
+  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+}
+
+.marqueeColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+.marqueeColumn.up {
+  animation: scroll-up 60s linear infinite;
+}
+
+.marqueeColumn.down {
+  animation: scroll-down 60s linear infinite;
+}
+
+.marqueeColumn.slow {
+  animation-duration: 90s;
+}
+
+.marqueeColumn.fast {
+  animation-duration: 45s;
+}
+
+@keyframes scroll-up {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-33.33%); }
+}
+
+@keyframes scroll-down {
+  0% { transform: translateY(-33.33%); }
+  100% { transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .marqueeContainer {
+    height: 400px;
+  }
+}
+
+/* Responsive Utilities */
+.hideMobile {
+  display: block;
+}
+
+.hideDesktop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hideMobile {
+    display: none !important;
+  }
+
+  .hideDesktop {
+    display: block !important;
+  }
 }

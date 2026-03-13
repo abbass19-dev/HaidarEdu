@@ -9,6 +9,7 @@ import {
   TrendingUp,
   TrendingDown,
   Minus,
+  Notebook,
 } from "lucide-react";
 import { getUsers, getCourses, getArticles, getChats } from "@/lib/db";
 import styles from "./admin.module.css";
@@ -107,7 +108,7 @@ export default function AdminDashboardPage() {
           },
         });
 
-        const recentUsers = usersData
+        const recentUsers = (usersData as any[])
           .sort(
             (a, b) =>
               new Date(b.createdAt || 0).getTime() -

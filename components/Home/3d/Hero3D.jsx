@@ -77,10 +77,10 @@ const Hero3D = () => {
 
                 <div style={{
                     position: 'absolute',
-                    top: '40px',
+                    top: '50px',
                     left: '20px',
                     right: '20px',
-                    bottom: '40px',
+                    bottom: '50px',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
