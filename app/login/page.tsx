@@ -9,6 +9,7 @@ import { loginWithEmail, loginWithGoogle } from '@/lib/auth';
 
 const LoginPage = () => {
     const router = useRouter();
+    const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [loading, setLoading] = React.useState(false);
