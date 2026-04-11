@@ -29,10 +29,36 @@ const Navbar = () => {
   const [role, setRole] = useState(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [logoUrl, setLogoUrl] = useState("");
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const pathname = usePathname();
+  const isAdmin = pathname?.startsWith("/admin");
   const dropdownRef = useRef(null);
+  const prevUnreadRef = useRef(-1);
+  const [showToast, setShowToast] = useState(false);
+  const flashInterval = useRef(null);
+  const originalTitle = useRef("");
+  const chatUnsubRef = useRef(null);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+        originalTitle.current = document.title;
+    }
+    
+    if (typeof window !== "undefined" && "Notification" in window) {
+      if (Notification.permission === "default") {
+          // We'll ask later or just try now
+          Notification.requestPermission();
+      }
+    }
+    const handleVisibilityChange = () => {
+        if (!document.hidden && flashInterval.current) {
+            clearInterval(flashInterval.current);
+            flashInterval.current = null;
+            document.title = originalTitle.current;
+        }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
 
@@ -41,8 +67,20 @@ const Navbar = () => {
       if (u) {
         const r = await getUserRole(u.uid);
         setRole(r);
+        
+        // Clean up old sub if exists
+        if (chatUnsubRef.current) chatUnsubRef.current();
+
+        import("@/lib/firebase/chat").then(({ subscribeToUnreadChatCount }) => {
+          chatUnsubRef.current = subscribeToUnreadChatCount(u.uid, (count) => {
+            setUnreadChatCount(count);
+          });
+        });
       } else {
         setRole(null);
+        setUnreadChatCount(0);
+        if (chatUnsubRef.current) chatUnsubRef.current();
+        chatUnsubRef.current = null;
       }
     });
 
@@ -60,9 +98,51 @@ const Navbar = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("visibilitychange", handleClickOutside);
+      if (chatUnsubRef.current) chatUnsubRef.current();
       unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    // Skip if first run or no increase
+    if (prevUnreadRef.current !== -1 && unreadChatCount > prevUnreadRef.current) {
+      if (!isAdmin) {
+        // Play notification chime
+        const chime = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
+        chime.volume = 0.5;
+        chime.play().catch(() => {});
+
+        if (typeof document !== 'undefined' && document.hidden) {
+          // Tab is hidden, show desktop notification and flash title
+          if (!flashInterval.current) {
+            let isFlashed = false;
+            flashInterval.current = setInterval(() => {
+              document.title = isFlashed ? originalTitle.current : "💬 New Message!";
+              isFlashed = !isFlashed;
+            }, 1000);
+          }
+          if ("Notification" in window && Notification.permission === "granted") {
+            const notif = new Notification("HaidarEdu Support", {
+              body: "You have a new message from our support team.",
+              icon: "/favicon.ico"
+            });
+            notif.onclick = () => {
+                window.focus();
+                notif.close();
+            };
+          }
+        } else if (!pathname?.startsWith('/live-chat')) {
+          // Browsing another page, show toast
+          setShowToast(true);
+          setTimeout(() => setShowToast(false), 6000);
+        }
+      }
+    }
+    if (unreadChatCount !== prevUnreadRef.current) {
+      prevUnreadRef.current = unreadChatCount;
+    }
+  }, [unreadChatCount, pathname, isAdmin]);
 
   const navLinks = [
     { name: "Home", path: "/", icon: "Home" },
@@ -86,7 +166,6 @@ const Navbar = () => {
   };
 
   const showBackground = scrolled;
-  const isAdmin = pathname.startsWith("/admin");
 
   return (
     <>
@@ -208,8 +287,26 @@ const Navbar = () => {
                     zIndex: 1,
                   }}
                 >
-                  <span style={{ position: "relative", zIndex: 2 }}>
+                  <span style={{ position: "relative", zIndex: 2, display: "flex", alignItems: "center" }}>
                     {link.name}
+                    {link.name === "Support" && unreadChatCount > 0 && !isAdmin && (
+                        <span style={{ 
+                            marginLeft: "6px", 
+                            background: "#ef4444", 
+                            color: "white", 
+                            borderRadius: "50%", 
+                            width: "18px", 
+                            height: "18px", 
+                            display: "flex", 
+                            alignItems: "center", 
+                            justifyContent: "center", 
+                            fontSize: "0.65rem", 
+                            fontWeight: "bold",
+                            boxShadow: "0 0 10px rgba(239, 68, 68, 0.4)"
+                        }}>
+                            {unreadChatCount}
+                        </span>
+                    )}
                   </span>
                   {isActive && (
                     <motion.div
@@ -497,7 +594,28 @@ const Navbar = () => {
                   transition: "0.3s",
                 }}
               >
-                {link.icon}
+                <div style={{ position: "relative" }}>
+                  {link.icon}
+                  {link.name === "Support" && unreadChatCount > 0 && !isAdmin && (
+                      <span style={{
+                          position: "absolute",
+                          top: "-4px",
+                          right: "-8px",
+                          background: "#ef4444",
+                          color: "white",
+                          borderRadius: "50%",
+                          width: "16px",
+                          height: "16px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "0.55rem",
+                          fontWeight: "bold"
+                      }}>
+                          {unreadChatCount}
+                      </span>
+                  )}
+                </div>
                 <span style={{ fontSize: "0.65rem", fontWeight: "600" }}>
                   {link.name}
                 </span>
@@ -590,6 +708,53 @@ const Navbar = () => {
                 </motion.div>
               ))}
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showToast && !isAdmin && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.9 }}
+            style={{
+                position: 'fixed',
+                bottom: '90px', // above mobile nav
+                right: '20px',
+                zIndex: 9999,
+                background: '#0F0F0F',
+                border: '1px solid var(--primary-lime)',
+                padding: '16px',
+                borderRadius: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                boxShadow: '0 10px 40px rgba(0,0,0,0.5), 0 0 20px rgba(203, 251, 69, 0.15)'
+            }}
+          >
+            <div style={{
+                background: 'var(--primary-lime)',
+                color: 'black',
+                width: '32px', height: '32px',
+                borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0
+            }}>
+                <MessageSquare size={16} />
+            </div>
+            <div style={{ flex: 1 }}>
+                <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 'bold', color: 'white' }}>New Message</p>
+                <p style={{ margin: 0, fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)' }}>Support sent you a message</p>
+            </div>
+            <Link href="/live-chat" onClick={() => setShowToast(false)}>
+                <button className="btn-primary" style={{ padding: '6px 12px', fontSize: '0.75rem', borderRadius: '8px' }}>
+                    Reply
+                </button>
+            </Link>
+            <button onClick={() => setShowToast(false)} style={{ background: 'transparent', border: 'none', color: 'gray', padding: '4px', cursor: 'pointer', marginLeft: '-4px' }}>
+                <X size={14} />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

@@ -12,6 +12,7 @@ import {
   BookOpen,
   Phone,
   MapPin,
+  MessageSquare,
 } from "lucide-react";
 import { getUsers, updateUserRole, deleteUser, getAllEnrollments } from "@/lib/db";
 
@@ -137,205 +138,185 @@ export default function UserManagerPage() {
         </div>
       </div>
 
-      <div
-        className="glass"
-        style={{ borderRadius: "var(--radius-lg)", overflow: "hidden" }}
-      >
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              textAlign: "left",
-              minWidth: "800px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  background: "rgba(255,255,255,0.02)",
-                  borderBottom: "1px solid var(--border-subtle)",
-                }}
-              >
-                <th style={{ padding: "20px" }}>User</th>
-                <th style={{ padding: "20px" }}>Role</th>
-                <th style={{ padding: "20px" }}>Joined</th>
-                <th style={{ padding: "20px" }}>Enrolled</th>
-                <th style={{ padding: "20px" }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.map((user) => (
-                <tr
-                  key={user.id}
-                  style={{ borderBottom: "1px solid var(--border-subtle)" }}
-                >
-                  <td style={{ padding: "20px" }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "50%",
-                          background: "rgba(255,255,255,0.1)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: "14px",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {user.firstName ? (
-                          user.firstName[0].toUpperCase()
-                        ) : (
-                          <User size={16} color="var(--text-dim)" />
-                        )}
-                      </div>
-                      <div>
-                        <div style={{ fontWeight: "600" }}>
-                          {user.firstName
-                            ? `${user.firstName} ${user.lastName || ""}`
-                            : user.email}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "0.8rem",
-                            color: "var(--text-dim)",
-                          }}
-                        >
-                          {user.email}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style={{ padding: "20px" }}>
-                    <span
-                      style={{
-                        fontSize: "0.75rem",
-                        padding: "4px 12px",
-                        borderRadius: "var(--radius-full)",
-                        background:
-                          user.role === "admin"
-                            ? "rgba(203, 251, 69, 0.1)"
-                            : "rgba(255, 255, 255, 0.05)",
-                        color:
-                          user.role === "admin"
-                            ? "var(--primary-lime)"
-                            : "var(--text-muted)",
-                        border:
-                          user.role === "admin"
-                            ? "1px solid rgba(203, 251, 69, 0.2)"
-                            : "1px solid var(--border-subtle)",
-                      }}
-                    >
-                      {user.role || "user"}
-                    </span>
-                  </td>
-                  <td
-                    style={{
-                      padding: "20px",
-                      color: "var(--text-dim)",
-                      fontSize: "0.9rem",
-                    }}
-                  >
-                    {user.createdAt
-                      ? new Date(user.createdAt).toLocaleDateString()
-                      : "N/A"}
-                  </td>
-                  <td style={{ padding: "20px" }}>
-                    {user.enrolledCourses?.length || 0}
-                  </td>
-                  <td style={{ padding: "16px" }}>
-                    <div style={{ display: "flex", gap: "8px" }}>
-                      <button
-                        onClick={() => setSelectedUser(user)}
-                        style={{
-                          padding: "6px",
-                          borderRadius: "8px",
-                          border: "1px solid var(--border-subtle)",
-                          background: "transparent",
-                          color: "var(--text-main)",
-                          cursor: "pointer",
-                        }}
-                        title="View Details"
-                      >
-                        <Eye size={16} />
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleRoleUpdate(user.id, user.role || "user")
-                        }
-                        style={{
-                          padding: "6px",
-                          borderRadius: "8px",
-                          border: "1px solid var(--border-subtle)",
-                          background: "transparent",
-                          color:
-                            user.role === "admin"
-                              ? "var(--primary-lime)"
-                              : "var(--text-dim)",
-                          cursor: "pointer",
-                        }}
-                        title={
-                          user.role === "admin"
-                            ? "Demote to User"
-                            : "Promote to Admin"
-                        }
-                      >
-                        {user.role === "admin" ? (
-                          <ShieldAlert size={16} />
-                        ) : (
-                          <Shield size={16} />
-                        )}
-                      </button>
-                      <button
-                        onClick={() => handleDelete(user.id)}
-                        style={{
-                          padding: "6px",
-                          borderRadius: "8px",
-                          border: "1px solid #FF4444",
-                          background: "transparent",
-                          color: "#FF4444",
-                          cursor: "pointer",
-                        }}
-                        title="Delete User"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {loading && (
-                <tr>
-                  <td
-                    colSpan={5}
-                    style={{ textAlign: "center", padding: "20px" }}
-                  >
-                    Loading users...
-                  </td>
-                </tr>
-              )}
-              {!loading && filteredUsers.length === 0 && (
-                <tr>
-                  <td
-                    colSpan={5}
-                    style={{ textAlign: "center", padding: "20px" }}
-                  >
-                    No users found matching "{searchTerm}"
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+      {loading ? (
+        <div style={{ textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>Loading users...</div>
+      ) : filteredUsers.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "60px", color: "var(--text-muted)", background: "rgba(255,255,255,0.02)", borderRadius: "var(--radius-lg)", border: "1px dashed var(--border-subtle)" }}>
+          <p>No users found matching "{searchTerm}"</p>
         </div>
-      </div>
+      ) : (
+        <div style={{ 
+          display: "grid", 
+          gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", 
+          gap: "24px" 
+        }}>
+          {filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className="glass"
+              style={{
+                borderRadius: "var(--radius-lg)",
+                padding: "24px",
+                display: "flex",
+                flexDirection: "column",
+                transition: "transform 0.2s, background 0.2s",
+                position: "relative"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-4px)";
+                e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "none";
+                e.currentTarget.style.background = "rgba(10,10,10,0.6)";
+              }}
+            >
+              {/* Role Badge */}
+              <span style={{
+                position: "absolute",
+                top: "20px",
+                right: "20px",
+                fontSize: "0.7rem",
+                padding: "4px 10px",
+                borderRadius: "var(--radius-full)",
+                background: user.role === "admin" ? "rgba(203, 251, 69, 0.15)" : "rgba(255, 255, 255, 0.05)",
+                color: user.role === "admin" ? "var(--primary-lime)" : "var(--text-muted)",
+                border: user.role === "admin" ? "1px solid rgba(203, 251, 69, 0.3)" : "1px solid var(--border-subtle)",
+                textTransform: "uppercase",
+                letterSpacing: "0.5px",
+                fontWeight: "600"
+              }}>
+                {user.role || "user"}
+              </span>
+
+              {/* Header Profile */}
+              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
+                <div style={{
+                  width: "56px",
+                  height: "56px",
+                  borderRadius: "50%",
+                  background: user.role === "admin" ? "var(--primary-lime)" : "rgba(255,255,255,0.1)",
+                  color: user.role === "admin" ? "black" : "white",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  flexShrink: 0
+                }}>
+                  {user.firstName ? user.firstName[0].toUpperCase() : <User size={24} />}
+                </div>
+                <div style={{ overflow: "hidden" }}>
+                  <h3 style={{ fontSize: "1.1rem", marginBottom: "4px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {user.firstName ? `${user.firstName} ${user.lastName || ""}` : "Unnamed User"}
+                  </h3>
+                  <p style={{ color: "var(--text-dim)", fontSize: "0.85rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+
+              {/* User Stats */}
+              <div style={{ display: "flex", gap: "16px", marginBottom: "24px", padding: "12px", background: "rgba(0,0,0,0.3)", borderRadius: "8px" }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: "0.75rem", color: "var(--text-dim)", marginBottom: "4px" }}>Joined</div>
+                  <div style={{ fontSize: "0.9rem" }}>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A"}</div>
+                </div>
+                <div style={{ width: "1px", background: "var(--border-subtle)" }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: "0.75rem", color: "var(--text-dim)", marginBottom: "4px" }}>Enrollments</div>
+                  <div style={{ fontSize: "0.9rem", color: "var(--primary-lime)", fontWeight: "600" }}>{user.enrolledCourses?.length || 0} active</div>
+                </div>
+              </div>
+
+              {/* Actions Footer */}
+              <div style={{ display: "flex", gap: "8px", marginTop: "auto", flexWrap: "wrap" }}>
+                <a
+                  href={`/admin/chats?userId=${user.id}`}
+                  style={{
+                    flex: "1 1 calc(50% - 4px)",
+                    padding: "10px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--primary-lime)",
+                    background: "rgba(163, 230, 53, 0.05)",
+                    color: "var(--primary-lime)",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                    fontSize: "0.85rem",
+                    transition: "background 0.2s",
+                    textDecoration: "none"
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(163, 230, 53, 0.15)"}
+                  onMouseLeave={(e) => e.currentTarget.style.background = "rgba(163, 230, 53, 0.05)"}
+                >
+                  <MessageSquare size={16} /> Msg
+                </a>
+                <button
+                  onClick={() => setSelectedUser(user)}
+                  style={{
+                    flex: "1 1 calc(50% - 4px)",
+                    padding: "10px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border-subtle)",
+                    background: "rgba(255,255,255,0.05)",
+                    color: "var(--text-main)",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                    fontSize: "0.85rem",
+                    transition: "background 0.2s"
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                  onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
+                >
+                  <Eye size={16} /> Details
+                </button>
+                <button
+                  onClick={() => handleRoleUpdate(user.id, user.role || "user")}
+                  style={{
+                    flex: 1,
+                    padding: "10px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border-subtle)",
+                    background: "rgba(255,255,255,0.05)",
+                    color: user.role === "admin" ? "var(--primary-lime)" : "var(--text-dim)",
+                    cursor: "pointer",
+                    transition: "background 0.2s"
+                  }}
+                  title={user.role === "admin" ? "Demote Admin" : "Promote to Admin"}
+                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                  onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
+                >
+                  {user.role === "admin" ? <ShieldAlert size={16} /> : <Shield size={16} />}
+                </button>
+                <button
+                  onClick={() => handleDelete(user.id)}
+                  style={{
+                    flex: 1,
+                    padding: "10px",
+                    borderRadius: "8px",
+                    border: "1px solid rgba(255, 68, 68, 0.3)",
+                    background: "rgba(255, 68, 68, 0.1)",
+                    color: "#FF4444",
+                    cursor: "pointer",
+                    transition: "background 0.2s"
+                  }}
+                  title="Delete User"
+                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255, 68, 68, 0.2)"}
+                  onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255, 68, 68, 0.1)"}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {selectedUser && (
         <div

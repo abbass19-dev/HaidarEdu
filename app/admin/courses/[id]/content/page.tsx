@@ -338,136 +338,151 @@ export default function CourseContentPage() {
         </div>
       )}
 
-      {/* Content List */}
-      <div
-        className="glass"
-        style={{ borderRadius: "var(--radius-lg)", overflow: "hidden" }}
-      >
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              textAlign: "left",
-              minWidth: "500px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  background: "rgba(255,255,255,0.02)",
-                  borderBottom: "1px solid var(--border-subtle)",
-                }}
-              >
-                <th style={{ padding: "20px" }}>Title</th>
-                <th style={{ padding: "20px" }}>Type</th>
-                <th style={{ padding: "20px" }}>Date</th>
-                <th style={{ padding: "20px" }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {contentItems.map((item) => (
-                <tr
-                  key={item.id}
-                  style={{ borderBottom: "1px solid var(--border-subtle)" }}
-                >
-                  <td style={{ padding: "20px" }}>
-                    <div style={{ fontWeight: "600" }}>{item.title}</div>
-                  </td>
-                  <td style={{ padding: "20px" }}>
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        padding: "4px 12px",
-                        borderRadius: "var(--radius-full)",
-                        fontSize: "0.75rem",
-                        background: `${getTypeColor(item.type)}22`,
-                        color: getTypeColor(item.type),
-                        fontWeight: "600",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {getIcon(item.type)} {item.type}
-                    </span>
-                  </td>
-                  <td
-                    style={{
-                      padding: "20px",
-                      color: "var(--text-muted)",
-                      fontSize: "0.85rem",
-                    }}
-                  >
-                    {item.createdAt
-                      ? new Date(item.createdAt).toLocaleDateString()
-                      : "-"}
-                  </td>
-                  <td style={{ padding: "16px" }}>
-                    <div style={{ display: "flex", gap: "8px" }}>
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          padding: "6px 12px",
-                          borderRadius: "8px",
-                          border: "1px solid var(--border-subtle)",
-                          background: "transparent",
-                          color: "var(--text-main)",
-                          cursor: "pointer",
-                          fontSize: "0.8rem",
-                          textDecoration: "none",
-                        }}
-                      >
-                        Preview
-                      </a>
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        style={{
-                          padding: "6px",
-                          borderRadius: "8px",
-                          border: "1px solid #FF4444",
-                          background: "transparent",
-                          color: "#FF4444",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {loading && (
-                <tr>
-                  <td
-                    colSpan={4}
-                    style={{ textAlign: "center", padding: "20px" }}
-                  >
-                    Loading content...
-                  </td>
-                </tr>
-              )}
-              {!loading && contentItems.length === 0 && (
-                <tr>
-                  <td
-                    colSpan={4}
-                    style={{
-                      textAlign: "center",
-                      padding: "40px 20px",
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    No content yet. Click "Add Content" to upload your first
-                    item.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+      {loading ? (
+        <div style={{ textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>Loading content...</div>
+      ) : contentItems.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "60px", color: "var(--text-muted)", background: "rgba(255,255,255,0.02)", borderRadius: "var(--radius-lg)", border: "1px dashed var(--border-subtle)" }}>
+          <p style={{ marginBottom: "16px" }}>No content items yet.</p>
+          <button className="btn-primary" onClick={() => setShowForm(true)}><Plus size={16} style={{ marginRight: '6px' }} /> Upload your first lesson</button>
         </div>
-      </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          {contentItems.map((item, index) => (
+            <div
+              key={item.id}
+              className="glass"
+              style={{
+                display: "flex",
+                flexDirection: isMobile ? "column" : "row",
+                gap: "20px",
+                padding: "24px",
+                borderRadius: "var(--radius-lg)",
+                alignItems: isMobile ? "flex-start" : "center",
+                transition: "transform 0.2s, background 0.2s",
+                position: "relative",
+                overflow: "hidden"
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}
+              onMouseLeave={(e) => e.currentTarget.style.background = "rgba(10,10,10,0.6)"}
+            >
+              {/* Left Decoration Border */}
+              <div style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: "4px",
+                background: getTypeColor(item.type)
+              }} />
+
+              {/* Number Badge */}
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                background: `${getTypeColor(item.type)}22`,
+                color: getTypeColor(item.type),
+                fontWeight: "700",
+                flexShrink: 0
+              }}>
+                {index + 1}
+              </div>
+
+              {/* Info Column */}
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "6px" }}>
+                  <h3 style={{ fontSize: "1.1rem" }}>{item.title}</h3>
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      padding: "2px 8px",
+                      borderRadius: "var(--radius-full)",
+                      fontSize: "0.65rem",
+                      background: `${getTypeColor(item.type)}33`,
+                      color: getTypeColor(item.type),
+                      fontWeight: "700",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.5px"
+                    }}
+                  >
+                    {getIcon(item.type)} {item.type}
+                  </span>
+                </div>
+                
+                {/* User's Description Requirement */}
+                {item.desc && (
+                  <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginBottom: "8px", lineHeight: "1.5" }}>
+                    {item.desc}
+                  </p>
+                )}
+                
+                <div style={{ color: "var(--text-dim)", fontSize: "0.75rem", display: "flex", alignItems: "center", gap: "12px" }}>
+                  <span>Added: {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : "-"}</span>
+                </div>
+              </div>
+
+              {/* Actions Column */}
+              <div style={{ 
+                display: "flex", 
+                gap: "8px", 
+                width: isMobile ? "100%" : "auto", 
+                marginTop: isMobile ? "16px" : 0,
+                paddingTop: isMobile ? "16px" : 0,
+                borderTop: isMobile ? "1px solid var(--border-subtle)" : "none"
+              }}>
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    padding: "8px 16px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border-subtle)",
+                    background: "rgba(255,255,255,0.05)",
+                    color: "var(--text-main)",
+                    cursor: "pointer",
+                    fontSize: "0.85rem",
+                    textDecoration: "none",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flex: isMobile ? 1 : "initial",
+                    transition: "background 0.2s"
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                  onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
+                >
+                  Preview
+                </a>
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  style={{
+                    padding: "8px",
+                    borderRadius: "8px",
+                    border: "1px solid rgba(255, 68, 68, 0.3)",
+                    background: "rgba(255, 68, 68, 0.1)",
+                    color: "#FF4444",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transition: "background 0.2s"
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255, 68, 68, 0.2)"}
+                  onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255, 68, 68, 0.1)"}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
