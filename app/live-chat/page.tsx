@@ -17,11 +17,15 @@ export default function LiveChatPage() {
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(true);
     const [isMobile, setIsMobile] = useState(false);
+    const [isTiny, setIsTiny] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const isNearBottomRef = useRef(true);
 
     useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+            setIsTiny(window.innerWidth < 350);
+        };
         checkMobile();
         window.addEventListener('resize', checkMobile);
 
@@ -101,15 +105,18 @@ export default function LiveChatPage() {
         return (
             <div className="admin-chat-wrapper">
                 <Navbar />
-                <div className="container" style={{ padding: '120px 0', textAlign: 'center' }}>
-                    <div className="glass" style={{ maxWidth: '600px', margin: '0 auto', padding: '48px', borderRadius: '24px' }}>
+                <div className="container" style={{ 
+                    padding: isMobile ? '100px 16px' : '120px 0', 
+                    textAlign: 'center' 
+                }}>
+                    <div className="glass" style={{ maxWidth: '600px', margin: '0 auto', padding: isMobile ? '32px 24px' : '48px', borderRadius: '24px' }}>
                         <ShieldAlert size={64} style={{ color: 'var(--primary-lime)', marginBottom: '24px' }} />
-                        <h2 style={{ fontSize: '2rem', marginBottom: '16px', fontWeight: 'bold' }}>Admin Access Restricted</h2>
-                        <p style={{ color: 'var(--text-muted)', marginBottom: '32px', fontSize: '1.1rem', lineHeight: '1.6' }}>
+                        <h2 style={{ fontSize: isMobile ? '1.5rem' : '2rem', marginBottom: '16px', fontWeight: 'bold' }}>Admin Access Restricted</h2>
+                        <p style={{ color: 'var(--text-muted)', marginBottom: '32px', fontSize: isMobile ? '0.95rem' : '1.1rem', lineHeight: '1.6' }}>
                             You are logged in as an Administrator. Please use the Admin Dashboard to manage support requests and reply to users.
                         </p>
                         <Link href="/admin/chats">
-                            <button className="btn-primary" style={{ padding: '14px 32px', fontSize: '1rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                            <button className="btn-primary" style={{ padding: '14px 32px', fontSize: '1rem', display: 'inline-flex', alignItems: 'center', gap: '8px', width: isMobile ? '100%' : 'auto', justifyContent: 'center' }}>
                                 Go to Admin Dashboard <Bot size={18} />
                             </button>
                         </Link>
@@ -122,44 +129,53 @@ export default function LiveChatPage() {
     return (
         <AuthGuard>
             <Navbar />
-            <div className="container" style={{ paddingTop: '120px', paddingBottom: '60px' }}>
+            <div className="container" style={{ 
+                paddingTop: isMobile ? '80px' : '120px', 
+                paddingBottom: isMobile ? '100px' : '60px',
+                paddingLeft: isMobile ? '0' : '15px',
+                paddingRight: isMobile ? '0' : '15px'
+            }}>
 
                 <div className="glass" style={{
                     maxWidth: '900px',
                     margin: '0 auto',
-                    height: isMobile ? 'calc(100vh - 200px)' : '75vh',
+                    height: isMobile ? 'calc(100vh - 180px)' : '75vh',
                     display: 'flex',
                     flexDirection: 'column',
                     borderRadius: isMobile ? '0' : '24px',
                     overflow: 'hidden',
-                    border: isMobile ? 'none' : '1px solid var(--glass-border)'
+                    borderLeft: isMobile ? 'none' : '1px solid var(--glass-border)',
+                    borderRight: isMobile ? 'none' : '1px solid var(--glass-border)',
+                    borderTop: isMobile ? '1px solid var(--glass-border)' : '1px solid var(--glass-border)',
+                    borderBottom: isMobile ? '1px solid var(--glass-border)' : '1px solid var(--glass-border)',
+                    background: isMobile ? 'rgba(0,0,0,0.4)' : 'var(--glass-bg)'
                 }}>
                     <div style={{
-                        padding: '24px',
+                        padding: isTiny ? '12px 14px' : (isMobile ? '16px 20px' : '24px'),
                         background: 'rgba(255,255,255,0.02)',
                         borderBottom: '1px solid var(--border-subtle)',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '16px'
+                        gap: isTiny ? '10px' : '16px'
                     }}>
                         <div style={{
-                            width: '42px',
-                            height: '42px',
-                            borderRadius: '50%',
+                            width: isTiny ? '36px' : '44px',
+                            height: isTiny ? '36px' : '44px',
+                            borderRadius: '12px',
                             background: 'var(--primary-lime)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             color: '#000',
-                            boxShadow: '0 4px 10px rgba(203, 251, 69, 0.3)'
+                            boxShadow: '0 4px 12px rgba(203, 251, 69, 0.2)'
                         }}>
-                            <Bot size={20} />
+                            <Bot size={isTiny ? 18 : 20} />
                         </div>
-                        <div>
-                            <h1 style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>HaidarEdu Support</h1>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--primary-lime)' }}>
-                                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'currentColor', boxShadow: '0 0 8px currentColor' }}></span>
-                                We reply instantly
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                            <h1 style={{ fontSize: isTiny ? '0.9rem' : (isMobile ? '1rem' : '1.2rem'), fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>HaidarEdu Support</h1>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: isTiny ? '0.7rem' : (isMobile ? '0.75rem' : '0.8rem'), color: 'var(--primary-lime)' }}>
+                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'currentColor', boxShadow: '0 0 8px currentColor' }}></span>
+                                {isTiny ? "Online" : (isMobile ? "Instant Replies" : "We reply instantly")}
                             </div>
                         </div>
                     </div>
@@ -170,26 +186,26 @@ export default function LiveChatPage() {
                         style={{
                             flex: 1,
                             overflowY: 'auto',
-                            padding: isMobile ? '16px' : '32px',
+                            padding: isMobile ? '16px 16px 32px 16px' : '32px',
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: isMobile ? '16px' : '24px',
+                            gap: isMobile ? '12px' : '24px',
                             background: 'rgba(0,0,0,0.2)'
                         }}>
                         <div style={{
-                            padding: '12px 20px',
+                            padding: '12px 16px',
                             background: 'rgba(203, 251, 69, 0.05)',
                             border: '1px solid rgba(203, 251, 69, 0.1)',
                             borderRadius: '12px',
                             color: 'var(--text-dim)',
-                            fontSize: '0.85rem',
+                            fontSize: isMobile ? '0.75rem' : '0.85rem',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '12px',
-                            marginBottom: '8px'
+                            marginBottom: isMobile ? '4px' : '8px'
                         }}>
                             <ShieldCheck size={18} style={{ color: 'var(--primary-lime)', flexShrink: 0 }} />
-                            <span>For privacy reasons, chat messages are automatically deleted after a period of time.</span>
+                            <span>Privacy: Messages are cleared automatically.</span>
                         </div>
                         {messages.length === 0 && (
                             <div style={{ textAlign: 'center', margin: 'auto', opacity: 0.5, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
@@ -233,15 +249,16 @@ export default function LiveChatPage() {
                     </div>
 
                     <div style={{
-                        padding: '24px',
+                        padding: isTiny ? '12px' : (isMobile ? '16px' : '24px'),
                         background: 'rgba(255,255,255,0.02)',
-                        borderTop: '1px solid var(--border-subtle)'
+                        borderTop: '1px solid var(--border-subtle)',
+                        paddingBottom: isMobile ? '24px' : '24px' 
                     }}>
                         <div style={{
                             display: 'flex',
-                            gap: '16px',
+                            gap: isTiny ? '6px' : (isMobile ? '8px' : '16px'),
                             background: 'rgba(0,0,0,0.3)',
-                            padding: '8px',
+                            padding: isTiny ? '4px' : (isMobile ? '6px' : '8px'),
                             borderRadius: '50px',
                             border: '1px solid var(--border-subtle)'
                         }}>
@@ -250,15 +267,15 @@ export default function LiveChatPage() {
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                                placeholder="Message support..."
+                                placeholder={isTiny ? "Msg..." : "Message support..."}
                                 style={{
                                     flex: 1,
                                     background: '#1A1A1A',
                                     border: '1px solid rgba(255,255,255,0.05)',
-                                    padding: '16px 24px',
+                                    padding: isTiny ? '10px 14px' : (isMobile ? '12px 20px' : '16px 24px'),
                                     borderRadius: '30px',
                                     color: '#FFF',
-                                    fontSize: '0.95rem',
+                                    fontSize: isTiny ? '0.8rem' : (isMobile ? '0.85rem' : '0.95rem'),
                                     outline: 'none',
                                     boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)'
                                 }}
@@ -267,8 +284,8 @@ export default function LiveChatPage() {
                                 onClick={handleSend}
                                 disabled={!input.trim()}
                                 style={{
-                                    width: '52px',
-                                    height: '52px',
+                                    width: isTiny ? '38px' : (isMobile ? '44px' : '52px'),
+                                    height: isTiny ? '38px' : (isMobile ? '44px' : '52px'),
                                     borderRadius: '50%',
                                     background: input.trim() ? 'var(--primary-lime)' : 'rgba(255,255,255,0.1)',
                                     color: input.trim() ? '#000' : 'rgba(255,255,255,0.3)',
@@ -282,7 +299,7 @@ export default function LiveChatPage() {
                                     transform: input.trim() ? 'scale(1)' : 'scale(0.95)'
                                 }}
                             >
-                                <Send size={20} style={{ marginLeft: '2px' }} />
+                                <Send size={isTiny ? 16 : (isMobile ? 18 : 20)} style={{ marginLeft: '2px' }} />
                             </button>
                         </div>
                     </div>
