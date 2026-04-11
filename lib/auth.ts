@@ -16,17 +16,15 @@ const ADMIN_EMAIL = 'abbashijazi657@gmail.com';
 export const loginWithEmail = (email: string, pass: string) =>
     signInWithEmailAndPassword(auth, email, pass);
 
-export const signupWithEmail = async (email: string, password: string) => {
+export const signupWithEmail = async (name: string, email: string, password: string) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     const role = user.email === ADMIN_EMAIL ? 'admin' : 'user';
-    const firstName = user.email?.split('@')[0] || 'User';
 
     await setDoc(doc(db, "users", user.uid), {
         email: user.email,
-        firstName,
+        firstName: name,
         role,
-        enrolledCourses: [],
         createdAt: new Date().toISOString()
     });
     return user;
@@ -46,7 +44,6 @@ export const loginWithGoogle = async () => {
             email: user.email,
             firstName,
             role,
-            enrolledCourses: [],
             createdAt: new Date().toISOString()
         });
     }

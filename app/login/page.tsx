@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -41,8 +41,15 @@ const LoginPage = () => {
         setError('');
         setLoading(true);
         try {
-            await loginWithGoogle();
-            router.push('/admin'); // Or wherever appropriate
+            const result = await loginWithGoogle();
+            const { getUserRole } = await import('@/lib/db');
+            const role = await getUserRole(result.user.uid);
+            
+            if (role === 'admin') {
+                router.push('/admin');
+            } else {
+                router.push('/my-learning');
+            }
         } catch (err) {
             setError('Google sign-in failed.');
             console.error(err);

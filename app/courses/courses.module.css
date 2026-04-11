@@ -27,7 +27,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  gap: 24px;
 }
 
 .loading {
@@ -44,18 +44,55 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  border-color: rgba(163, 230, 53, 0.3);
 }
 
 .imageWrapper {
-  height: 200px;
+  position: relative;
+  height: 350px;
   width: 100%;
   overflow: hidden;
+  background: #0f1115;
+}
+
+.imageWrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(0, 0, 0, 0.08) 45%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 
 .image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+  transition:
+    transform 0.5s ease,
+    filter 0.4s ease;
+  filter: brightness(0.95) contrast(1.05) saturate(1.08);
+}
+
+.card:hover .image {
+  transform: scale(1.08);
+  filter: brightness(1) contrast(1.1) saturate(1.12);
 }
 
 .cardContent {
@@ -70,6 +107,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 12px;
 }
 
 .price {
@@ -87,11 +125,13 @@
 .cardTitle {
   font-size: 1.5rem;
   margin-bottom: 8px;
+  line-height: 1.2;
 }
 
 .cardDescription {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
   margin-bottom: 16px;
 }
 
@@ -99,4 +139,49 @@
   width: 100%;
   justify-content: center;
   margin-top: auto;
+}
+
+.enrolledBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(163, 230, 53, 0.15);
+  color: var(--primary-lime);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.enrolledBtn {
+  background: rgba(163, 230, 53, 0.1);
+  border: 1px solid var(--primary-lime);
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding-top: 130px;
+    padding-bottom: 80px;
+  }
+
+  .grid {
+    gap: 18px;
+  }
+
+  .imageWrapper {
+    height: 210px;
+  }
+
+  .cardContent {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .cardTitle {
+    font-size: 1.3rem;
+  }
+
+  .cardDescription {
+    font-size: 0.9rem;
+  }
 }

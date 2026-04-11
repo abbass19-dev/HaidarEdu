@@ -9,7 +9,10 @@ import {
     deleteDoc,
     doc,
     query,
-    orderBy
+    orderBy,
+    arrayUnion,
+    increment,
+    where
 } from "firebase/firestore";
 
 // Helper for Courses
@@ -112,3 +115,89 @@ export const getChats = async () => {
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
+// Helper for Admin Enrollment Management
+export const requestEnrollment = async (userId: string, userEmail: string, userName: string, courseId: string, courseTitle: string) => {
+    return await addDoc(collection(db, "enrollments"), {
+        userId,
+        userEmail,
+        userName,
+        courseId,
+        courseTitle,
+        status: "pending",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    });
+};
+
+export const getUserEnrollments = async (userId: string) => {
+    const q = query(collection(db, "enrollments"), where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const getUserEnrollmentStatus = async (userId: string, courseId: string) => {
+    const q = query(collection(db, "enrollments"), where("userId", "==", userId), where("courseId", "==", courseId));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+        // Return latest enrollment status (in case of multiple for some reason, though there shouldn't be)
+        const doc = querySnapshot.docs.sort((a, b) => 
+            new Date(b.data().createdAt).getTime() - new Date(a.data().createdAt).getTime()
+        )[0];
+        return doc.data().status; // "pending" | "approved" | "rejected"
+    }
+    return null;
+};
+
+export const getCourseEnrollments = async (courseId: string) => {
+    const q = query(collection(db, "enrollments"), where("courseId", "==", courseId));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const getAllPendingEnrollments = async () => {
+    const q = query(collection(db, "enrollments"), where("status", "==", "pending"));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const getAllEnrollments = async (): Promise<any[]> => {
+    const q = query(collection(db, "enrollments"), orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const updateEnrollmentStatus = async (enrollmentId: string, status: "approved" | "rejected" | "pending") => {
+    const enrollmentRef = doc(db, "enrollments", enrollmentId);
+    
+    // If approving, we might also want to increment course student count if it's the first time
+    // But for simplicity, we just update the enrollment document
+    await updateDoc(enrollmentRef, {
+        status,
+        updatedAt: new Date().toISOString()
+    });
+};
+
+export const deleteEnrollment = async (enrollmentId: string) => {
+    return await deleteDoc(doc(db, "enrollments", enrollmentId));
+};
+
+// Helper for Course Content (subcollection: courses/{courseId}/content)
+export const addCourseContent = async (courseId: string, content: any) => {
+    return await addDoc(collection(db, "courses", courseId, "content"), {
+        ...content,
+        createdAt: new Date().toISOString()
+    });
+};
+
+export const getCourseContent = async (courseId: string) => {
+    const q = query(
+        collection(db, "courses", courseId, "content"),
+        orderBy("createdAt", "desc")
+    );
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const deleteCourseContent = async (courseId: string, contentId: string) => {
+    return await deleteDoc(doc(db, "courses", courseId, "content", contentId));
+};

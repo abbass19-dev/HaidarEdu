@@ -1,11 +1,12 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { subscribeToAuthChanges } from "@/lib/auth";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { db } from "@/lib/firebase/config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { User, Save, Edit2, BookOpen } from "lucide-react";
+import { getUserEnrollments } from "@/lib/db";
+import { User, Save, Edit2, BookOpen, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/layout/Navbar";
 import styles from "./profile.module.css";
@@ -19,6 +20,7 @@ export default function UserProfilePage() {
     phone: "",
     address: "",
   });
+  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -33,6 +35,8 @@ export default function UserProfilePage() {
       setUser(u);
       if (u) {
         await fetchProfile(u.uid);
+        const courses = await getUserEnrollments(u.uid);
+        setEnrolledCourses(courses);
       } else {
         setLoading(false);
       }
@@ -229,6 +233,71 @@ export default function UserProfilePage() {
                 )}
               </div>
             </div>
+          </motion.div>
+
+          {/* Enrolled Courses Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className={`glass ${styles.coursesSection}`}
+          >
+            <div className={styles.coursesHeader}>
+              <h2 className={styles.coursesTitle}>
+                <BookOpen size={24} /> My Courses
+              </h2>
+              <span className={styles.courseCount}>
+                {enrolledCourses.length} course{enrolledCourses.length !== 1 ? "s" : ""}
+              </span>
+            </div>
+
+            {enrolledCourses.length === 0 ? (
+              <div className={styles.noCourses}>
+                <BookOpen size={48} style={{ opacity: 0.3, marginBottom: "16px" }} />
+                <p>You haven&apos;t enrolled in any courses yet.</p>
+                <a href="/courses" className={`btn-primary ${styles.browseCourses}`}>
+                  Browse Courses
+                </a>
+              </div>
+            ) : (
+              <div className={styles.coursesList}>
+                {enrolledCourses.map((course: any, index: number) => {
+                  const isApproved = course.status === "approved";
+                  const Component = isApproved ? motion.a : motion.div;
+                  return (
+                  <Component
+                    key={index}
+                    href={isApproved ? `/courses/${course.courseId}` : undefined}
+                    className={styles.courseCard}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 * index }}
+                    style={!isApproved ? { cursor: "default", opacity: 0.8 } : {}}
+                  >
+                    <div className={styles.courseInfo}>
+                      <h3 className={styles.courseCardTitle}>{course.courseTitle}</h3>
+                      <div className={styles.courseDate}>
+                        <Calendar size={14} />
+                        {course.status === "approved" ? "Enrolled" : "Requested"} {new Date(course.createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                    {isApproved ? (
+                      <span className={styles.viewCourse}>View →</span>
+                    ) : (
+                      <span style={{ 
+                        fontSize: "0.8rem", 
+                        padding: "4px 8px", 
+                        borderRadius: "12px", 
+                        background: course.status === "pending" ? "rgba(234, 179, 8, 0.15)" : "rgba(239, 68, 68, 0.15)",
+                        color: course.status === "pending" ? "#eab308" : "#ef4444"
+                      }}>
+                        {course.status}
+                      </span>
+                    )}
+                  </Component>
+                )})}
+              </div>
+            )}
           </motion.div>
         </div>
       </AuthGuard>
