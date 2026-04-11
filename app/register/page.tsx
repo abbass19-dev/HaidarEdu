@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -20,8 +20,8 @@ const SignupPage = () => {
         setError('');
         setLoading(true);
         try {
-            await signupWithEmail(email, password);
-            router.push('/courses');
+            await signupWithEmail(name, email, password);
+            router.push('/my-learning');
         } catch (err: any) {
             setError(err.message || 'Signup failed.');
             console.error(err);

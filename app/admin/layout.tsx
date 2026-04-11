@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -13,6 +13,7 @@ import {
   LogOut,
   Menu,
   X,
+  ListChecks,
 } from "lucide-react";
 import { logout } from "@/lib/auth";
 import { AuthGuard } from "@/components/auth/AuthGuard";
@@ -90,6 +91,12 @@ export default function AdminLayout({
 
           <nav className={styles.nav}>
             <SidebarItem
+              href="/"
+              icon={LayoutDashboard}
+              label="Home"
+              onClick={() => setIsSidebarOpen(false)}
+            />
+            <SidebarItem
               href="/admin"
               icon={LayoutDashboard}
               label="Dashboard"
@@ -105,6 +112,12 @@ export default function AdminLayout({
               href="/admin/articles"
               icon={FileText}
               label="Articles"
+              onClick={() => setIsSidebarOpen(false)}
+            />
+            <SidebarItem
+              href="/admin/enrollments"
+              icon={ListChecks}
+              label="Enrollments"
               onClick={() => setIsSidebarOpen(false)}
             />
             <SidebarItem

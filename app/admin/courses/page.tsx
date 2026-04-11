@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { Edit2, Trash2, Plus } from "lucide-react";
@@ -264,14 +264,20 @@ export default function CourseManagerPage() {
                     outline: "none",
                   }}
                 />
-                {uploading && (
-                  <span
-                    style={{ color: "var(--primary-lime)", fontSize: "0.8rem" }}
-                  >
-                    Uploading...
-                  </span>
-                )}
               </div>
+              {uploading && (
+                <span
+                  style={{ color: "var(--primary-lime)", fontSize: "0.8rem", marginTop: "4px" }}
+                >
+                  Uploading in progress... please wait.
+                </span>
+              )}
+              {formData.imageUrl && !uploading && (
+                <div style={{ marginTop: "8px", padding: "8px", background: "rgba(163, 230, 53, 0.1)", border: "1px solid var(--primary-lime)", borderRadius: "8px", display: "flex", gap: "10px", alignItems: "center" }}>
+                   <img src={formData.imageUrl} alt="preview" style={{ width: "40px", height: "40px", objectFit: "cover", borderRadius: "4px" }} />
+                   <span style={{ color: "var(--primary-lime)", fontSize: "0.85rem" }}>Banner image uploaded and ready!</span>
+                </div>
+              )}
             </div>
             <div style={{ display: "flex", gap: "16px" }}>
               <input
@@ -381,7 +387,7 @@ export default function CourseManagerPage() {
                         marginTop: "4px",
                       }}
                     >
-                      {course.lessons || 0} Lessons â€¢ {course.hours || 0}{" "}
+                      {course.lessons || 0} Lessons  {course.hours || 0}{" "}
                       Hours
                     </div>
                   </td>
@@ -409,6 +415,24 @@ export default function CourseManagerPage() {
                   <td style={{ padding: "20px" }}>{course.students}</td>
                   <td style={{ padding: "16px" }}>
                     <div style={{ display: "flex", gap: "8px" }}>
+                      <a
+                        href={`/admin/courses/${course.id}/content`}
+                        style={{
+                          padding: "6px 12px",
+                          borderRadius: "8px",
+                          border: "1px solid var(--primary-lime)",
+                          background: "transparent",
+                          color: "var(--primary-lime)",
+                          cursor: "pointer",
+                          fontSize: "0.75rem",
+                          textDecoration: "none",
+                          display: "flex",
+                          alignItems: "center",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        Content
+                      </a>
                       <button
                         onClick={() => handleEdit(course)}
                         style={{

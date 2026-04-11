@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -349,15 +349,44 @@ const Navbar = () => {
                         }}
                       >
                         {role === "admin" && (
-                          <Link
-                            href="/admin"
-                            onClick={() => setIsProfileOpen(false)}
-                            style={{ textDecoration: "none" }}
-                          >
-                            <div className="dropdown-item-special">
-                              <LayoutDashboard size={18} /> Admin Dashboard
-                            </div>
-                          </Link>
+                          <>
+                            <Link
+                              href="/admin"
+                              onClick={() => setIsProfileOpen(false)}
+                              style={{ textDecoration: "none" }}
+                            >
+                              <div className="dropdown-item-special">
+                                <LayoutDashboard size={18} /> Admin Home
+                              </div>
+                            </Link>
+                            <Link
+                              href="/admin/users"
+                              onClick={() => setIsProfileOpen(false)}
+                              style={{ textDecoration: "none" }}
+                            >
+                              <div className="dropdown-item-special">
+                                <User size={18} /> User Access
+                              </div>
+                            </Link>
+                            <Link
+                              href="/admin/enrollments"
+                              onClick={() => setIsProfileOpen(false)}
+                              style={{ textDecoration: "none" }}
+                            >
+                              <div className="dropdown-item-special">
+                                <FileText size={18} /> Enrollments
+                              </div>
+                            </Link>
+                            <Link
+                              href="/admin/courses"
+                              onClick={() => setIsProfileOpen(false)}
+                              style={{ textDecoration: "none" }}
+                            >
+                              <div className="dropdown-item-special">
+                                <BookOpen size={18} /> Manage Courses
+                              </div>
+                            </Link>
+                          </>
                         )}
                         <Link
                           href="/profile"
@@ -369,12 +398,12 @@ const Navbar = () => {
                           </div>
                         </Link>
                         <Link
-                          href="/dashboard"
+                          href="/my-learning"
                           onClick={() => setIsProfileOpen(false)}
                           style={{ textDecoration: "none" }}
                         >
                           <div className="dropdown-item-special">
-                            <Settings size={18} /> Enrollments
+                            <BookOpen size={18} /> My Learning
                           </div>
                         </Link>
                         <div
