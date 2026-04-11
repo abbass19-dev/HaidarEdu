@@ -75,7 +75,7 @@ const CoursesPage = () => {
                           `Hello Haidar, I am interested in enrolling in the "${course.title}" course.`,
                         );
                         window.open(
-                          `https://t.me/abbasshij?text=${message}`,
+                          `https://t.me/Ehaidar21?text=${message}`,
                           "_blank",
                         );
                       }}

@@ -88,9 +88,7 @@ const Hero = () => {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className={`${styles.heroTitle} glow-text`}
             >
-              The Future of <br />
-              <span>Trading</span>
-              is Funded
+              The Market Doesn’t Reward Hope… It Rewards Skill
             </motion.h1>
 
             <motion.p
