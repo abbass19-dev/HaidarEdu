@@ -1,12 +1,11 @@
-﻿'use client';
+'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { subscribeToAllChats, subscribeToChat, sendMessage, markChatRead, getChatUserDetails } from '@/lib/firebase/chat';
-
+import { useSearchParams } from 'next/navigation';
 import { User, Send, Search, ChevronLeft, ShieldCheck } from 'lucide-react';
 
-
-export default function ChatManagerPage() {
+function ChatManagerContent() {
     const [chats, setChats] = useState<any[]>([]);
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
     const [messages, setMessages] = useState<any[]>([]);
@@ -15,6 +14,14 @@ export default function ChatManagerPage() {
     const [isMobile, setIsMobile] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const isNearBottomRef = useRef(true);
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const uid = searchParams.get('userId');
+        if (uid) {
+            setSelectedChatId(uid);
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -72,7 +79,7 @@ export default function ChatManagerPage() {
         setInput('');
 
         try {
-            await sendMessage(selectedChatId, text, 'admin');
+            await sendMessage(selectedChatId, text, 'admin', userDetails?.firstName || '', userDetails?.email || '');
         } catch (error) {
             console.error("Failed to send:", error);
         }
@@ -133,12 +140,11 @@ export default function ChatManagerPage() {
                                 }}
                             >
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                                    <span style={{ fontWeight: '600', color: chat.unreadCount > 0 ? 'var(--primary-lime)' : 'var(--text-main)' }}>
-                                        User {chat.id.slice(0, 5)}...
+                                    <span style={{ fontWeight: '600', color: chat.unreadCount > 0 ? 'var(--primary-lime)' : 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '170px' }}>
+                                        {chat.userName ? chat.userName : `User ${chat.id.slice(0, 5)}...`}
                                     </span>
                                     <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                                         {chat.lastMessageTime ? new Date(chat.lastMessageTime).toLocaleTimeString() : ''}
-
                                     </span>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -317,5 +323,13 @@ export default function ChatManagerPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function ChatManagerPage() {
+    return (
+        <Suspense fallback={<div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>Loading chat...</div>}>
+            <ChatManagerContent />
+        </Suspense>
     );
 }

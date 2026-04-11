@@ -345,148 +345,132 @@ export default function CourseManagerPage() {
         </div>
       )}
 
-      <div
-        className="glass"
-        style={{ borderRadius: "var(--radius-lg)", overflow: "hidden" }}
-      >
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              textAlign: "left",
-              minWidth: "700px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  background: "rgba(255,255,255,0.02)",
-                  borderBottom: "1px solid var(--border-subtle)",
-                }}
-              >
-                <th style={{ padding: "20px" }}>Course Title</th>
-                <th style={{ padding: "20px" }}>Level</th>
-                <th style={{ padding: "20px" }}>Price</th>
-                <th style={{ padding: "20px" }}>Students</th>
-                <th style={{ padding: "20px" }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {courses.map((course) => (
-                <tr
-                  key={course.id}
-                  style={{ borderBottom: "1px solid var(--border-subtle)" }}
-                >
-                  <td style={{ padding: "20px" }}>
-                    <div style={{ fontWeight: "600" }}>{course.title}</div>
-                    <div
-                      style={{
-                        fontSize: "0.8rem",
-                        color: "var(--text-dim)",
-                        marginTop: "4px",
-                      }}
-                    >
-                      {course.lessons || 0} Lessons  {course.hours || 0}{" "}
-                      Hours
-                    </div>
-                  </td>
-                  <td style={{ padding: "20px" }}>
-                    <span
-                      className="glass"
-                      style={{
-                        padding: "4px 12px",
-                        borderRadius: "var(--radius-full)",
-                        fontSize: "0.75rem",
-                      }}
-                    >
-                      {course.level}
-                    </span>
-                  </td>
-                  <td
+      {loading ? (
+        <div style={{ textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>Loading courses...</div>
+      ) : courses.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "60px", color: "var(--text-muted)", background: "rgba(255,255,255,0.02)", borderRadius: "var(--radius-lg)", border: "1px dashed var(--border-subtle)" }}>
+          <p style={{ marginBottom: "16px" }}>No courses found.</p>
+          <button className="btn-primary" onClick={() => setShowForm(true)}><Plus size={16} style={{ marginRight: '6px' }} /> Create Your First Course</button>
+        </div>
+      ) : (
+        <div style={{ 
+          display: "grid", 
+          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", 
+          gap: "24px" 
+        }}>
+          {courses.map((course) => (
+            <div
+              key={course.id}
+              className="glass"
+              style={{
+                borderRadius: "var(--radius-lg)",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                transition: "transform 0.2s, box-shadow 0.2s",
+                position: "relative"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-4px)";
+                e.currentTarget.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "none";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              <div style={{ 
+                height: "160px", 
+                width: "100%", 
+                background: course.imageUrl ? `url(${course.imageUrl}) center/cover` : "#1a1a1a",
+                position: "relative"
+              }}>
+                <div style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: "linear-gradient(to top, rgba(0,0,0,0.8), transparent)"
+                }} />
+                <span style={{
+                  position: "absolute",
+                  top: "12px",
+                  right: "12px",
+                  background: "rgba(0,0,0,0.6)",
+                  backdropFilter: "blur(4px)",
+                  padding: "4px 12px",
+                  borderRadius: "var(--radius-full)",
+                  fontSize: "0.75rem",
+                  color: "white",
+                  border: "1px solid rgba(255,255,255,0.1)"
+                }}>
+                  {course.level}
+                </span>
+              </div>
+
+              <div style={{ padding: "20px", display: "flex", flexDirection: "column", flexGrow: 1 }}>
+                <h3 style={{ fontSize: "1.2rem", marginBottom: "8px", lineHeight: "1.3" }}>{course.title}</h3>
+                
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px", fontSize: "0.85rem", color: "var(--text-dim)" }}>
+                  <span>{course.lessons || 0} Lessons</span>
+                  <span>{course.hours || 0} Hours</span>
+                  <span>{course.students || 0} Students</span>
+                </div>
+
+                <div style={{ fontWeight: "700", color: "var(--primary-lime)", fontSize: "1.25rem", marginBottom: "24px" }}>
+                  {course.price}
+                </div>
+
+                <div style={{ marginTop: "auto", display: "flex", gap: "12px" }}>
+                  <a
+                    href={`/admin/courses/${course.id}/content`}
+                    className="btn-primary"
                     style={{
-                      padding: "20px",
-                      fontWeight: "700",
-                      color: "var(--primary-lime)",
+                      flex: 1,
+                      textAlign: "center",
+                      justifyContent: "center",
+                      textDecoration: "none",
+                      padding: "10px"
                     }}
                   >
-                    {course.price}
-                  </td>
-                  <td style={{ padding: "20px" }}>{course.students}</td>
-                  <td style={{ padding: "16px" }}>
-                    <div style={{ display: "flex", gap: "8px" }}>
-                      <a
-                        href={`/admin/courses/${course.id}/content`}
-                        style={{
-                          padding: "6px 12px",
-                          borderRadius: "8px",
-                          border: "1px solid var(--primary-lime)",
-                          background: "transparent",
-                          color: "var(--primary-lime)",
-                          cursor: "pointer",
-                          fontSize: "0.75rem",
-                          textDecoration: "none",
-                          display: "flex",
-                          alignItems: "center",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        Content
-                      </a>
-                      <button
-                        onClick={() => handleEdit(course)}
-                        style={{
-                          padding: "6px",
-                          borderRadius: "8px",
-                          border: "1px solid var(--border-subtle)",
-                          background: "transparent",
-                          color: "var(--text-main)",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <Edit2 size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(course.id)}
-                        style={{
-                          padding: "6px",
-                          borderRadius: "8px",
-                          border: "1px solid #FF4444",
-                          background: "transparent",
-                          color: "#FF4444",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {loading && (
-                <tr>
-                  <td
-                    colSpan={5}
-                    style={{ textAlign: "center", padding: "20px" }}
+                    Manage Content
+                  </a>
+                  <button
+                    onClick={() => handleEdit(course)}
+                    style={{
+                      padding: "10px",
+                      borderRadius: "8px",
+                      border: "1px solid var(--border-subtle)",
+                      background: "rgba(255,255,255,0.05)",
+                      color: "var(--text-main)",
+                      cursor: "pointer",
+                      transition: "background 0.2s"
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                    onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
                   >
-                    Loading courses...
-                  </td>
-                </tr>
-              )}
-              {!loading && courses.length === 0 && (
-                <tr>
-                  <td
-                    colSpan={5}
-                    style={{ textAlign: "center", padding: "20px" }}
+                    <Edit2 size={16} />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(course.id)}
+                    style={{
+                      padding: "10px",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                      background: "rgba(255, 68, 68, 0.1)",
+                      color: "#FF4444",
+                      cursor: "pointer",
+                      transition: "background 0.2s"
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255, 68, 68, 0.2)"}
+                    onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255, 68, 68, 0.1)"}
                   >
-                    No courses found. Add your first course!
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
+      )}
     </div>
   );
 }
