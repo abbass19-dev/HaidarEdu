@@ -73,7 +73,7 @@ const FundingProcess = () => {
             component={FundedCard3D}
             number="3"
             title="Get Funded"
-            desc="Receive your funded account and keep up to 90% of your profits."
+            desc="Receive your (giveaway)funded account after passing courses & leveling up"
             color="#FFD700"
           />
         </div>

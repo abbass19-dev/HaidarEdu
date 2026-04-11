@@ -61,8 +61,8 @@ const ProgramsPage = () => {
         <div className={`${styles.container} container`}>
           <header className={styles.header}>
             <h1 className={styles.title}>
-              Choose Your <span className={styles.titleHighlight}>Funding</span>{" "}
-              Path
+              Choose Your <span className={styles.titleHighlight}>Trading</span>{" "}
+              Program
             </h1>
             <p className={styles.subtitle}>
               Start your professional journey today. Pass the evaluation and
@@ -84,25 +84,25 @@ const ProgramsPage = () => {
               delay={0.1}
               buttonText="Join Group"
               onSelect={() =>
-                window.open("https://t.me/+eKf0Kl6m0N00ZGE0", "_blank")
+                window.open("https://t.me/masterofliquiditycommunity", "_blank")
               }
             />
             <ProgramCard
               title="Professional"
               price="$299"
               features={[
-                "$50,000 Starting Capital",
-                "85% Profit Split",
-                "1-Step Evaluation",
-                "Daily Profit Targets",
-                "Professional Tools Included",
-              ]}
+  "1-on-1 live sessions",
+  "Account risk management",
+  "Daily sessions",
+  "Private copy trading system",
+  "Professional strategies included",
+]}
               delay={0.2}
               highlight={true}
               buttonText="Contact Support"
               onSelect={() =>
                 window.open(
-                  "https://t.me/abbasshij?text=Hello%20Haidar%2C%20I%20am%20interested%20in%20joining%20the%20VIP%20Program.",
+                  "https://t.me/Ehaidar21?text=Hello%20Haidar%2C%20I%20am%20interested%20in%20joining%20the%20VIP%20Program.",
                   "_blank",
                 )
               }
@@ -121,7 +121,7 @@ const ProgramsPage = () => {
               buttonText="Join Elite"
               onSelect={() =>
                 window.open(
-                  "https://t.me/abbasshij?text=Hello%20Haidar%2C%20I%20am%20interested%20in%20joining%20the%20Elite%20Mentorship%20Program.",
+                  "https://t.me/Ehaidar21?text=Hello%20Haidar%2C%20I%20am%20interested%20in%20joining%20the%20Elite%20Mentorship%20Program.",
                   "_blank",
                 )
               }
